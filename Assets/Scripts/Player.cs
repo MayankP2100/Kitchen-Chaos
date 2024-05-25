@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
     [SerializeField] float moveSpeed = 8f;
     [SerializeField] float rotationSpeed = 10f;
 
+    bool isWalking = false;
+
     private void Update()
     {
         // Get the input from the player
@@ -43,5 +45,10 @@ public class Player : MonoBehaviour
         // Rotate the player
         transform.forward = 
             Vector3.Slerp(transform.forward, moveDirection, rotationSpeed * Time.deltaTime);
+
+        // Check if the player is walking
+        isWalking = moveDirection != Vector3.zero;
     }
+
+    public bool IsWalking() => isWalking;
 }
