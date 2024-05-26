@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
         if (!canMove)
         {
             float playerHeight = 2f;
-            float playerRadius = 0.7f;
+            float playerRadius = 1f;
             float maxDistance = moveSpeed * Time.deltaTime;
 
             // Attempt on X axis
