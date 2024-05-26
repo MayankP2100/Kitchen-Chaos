@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
 
     private bool isWalking = false;
 
+
     private void Update()
     {
         // Get the movement input from the player
@@ -20,15 +21,29 @@ public class Player : MonoBehaviour
         bool canMove = !Physics.CapsuleCast(
             transform.position, transform.position + Vector3.up * 2f, 1f, moveDirection, moveSpeed * Time.deltaTime);
 
+
+        /*
+            Check if the player can move in the direction of the input.
+            If the player can't move in the direction of the input, try to move on the X axis.
+            If the player can't move on the X axis, try to move on the Z axis.
+            If the player can't move on the Z axis, don't move.
+        */
         if (!canMove)
         {
+            float playerHeight = 2f;
+            float playerRadius = 0.7f;
+            float maxDistance = moveSpeed * Time.deltaTime;
+
             // Attempt on X axis
             Vector3 moveDirectionX = new Vector3(input.x, 0, 0).normalized;
 
-            canMove =
-                !Physics.CapsuleCast(
-                    transform.position, transform.position + Vector3.up * 2f, 1f,
-                    moveDirectionX, moveSpeed * Time.deltaTime);
+            canMove = !Physics.CapsuleCast(
+                    transform.position, 
+                    transform.position + Vector3.up * playerHeight, 
+                    playerRadius,
+                    moveDirectionX, 
+                    maxDistance
+                    );
 
             if (canMove)
             {
@@ -40,13 +55,17 @@ public class Player : MonoBehaviour
                 Vector3 moveDirectionZ = new Vector3(0, 0, input.y).normalized;
 
                 canMove = !Physics.CapsuleCast(
-                    transform.position, transform.position + Vector3.up * 2f, 1f, moveDirectionZ, moveSpeed * Time.deltaTime);
+                        transform.position,
+                        transform.position + Vector3.up * playerHeight,
+                        playerRadius,
+                        moveDirectionZ,
+                        maxDistance
+                        );
 
                 if (canMove)
                 {
                     transform.position += moveDirectionZ * moveSpeed * Time.deltaTime;
                 }
-                else { }
             }
         }
         else
@@ -58,6 +77,7 @@ public class Player : MonoBehaviour
         // Rotate the player
         transform.forward =
             Vector3.Slerp(transform.forward, moveDirection, rotationSpeed * Time.deltaTime);
+
 
         // Check if the player is walking
         isWalking = moveDirection != Vector3.zero;
