@@ -4,39 +4,17 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // Variables
     [SerializeField] float moveSpeed = 8f;
     [SerializeField] float rotationSpeed = 10f;
+    [SerializeField] GameInput gameInput;
 
-    bool isWalking = false;
+    private bool isWalking = false;
 
     private void Update()
     {
-        // Get the input from the player
-        Vector2 input = new Vector2(0, 0);
-
-        // Check if the player is pressing the keys
-        if (Input.GetKey(KeyCode.W))
-        {
-            input.y = 1;
-        }
-
-        if (Input.GetKey(KeyCode.S))
-        {
-            input.y = -1;
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            input.x = -1;
-        }
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            input.x = 1;
-        }
-
-        // Normalize the input vector so that the player moves at the same speed in all directions
-        input.Normalize();
+        // Get the movement input from the player
+        Vector2 input = gameInput.GetMovementVectorNormazlized();
 
         // Move the player
         Vector3 moveDirection = new Vector3(input.x, 0, input.y);
