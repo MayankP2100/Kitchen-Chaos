@@ -1,37 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour
 {
+    private PlayerInput playerInput;
+
+    private void Awake()
+    {
+        playerInput = new PlayerInput();
+        playerInput.Player.Enable();
+    }
+
     public Vector2 GetMovementVectorNormazlized()
     {
-        Vector2 input = new Vector2(0, 0);
+        // Read the input value from the player input
+        Vector2 inputVector = playerInput.Player.Move.ReadValue<Vector2>();
 
-        // Check if the player is pressing the keys
-        if (Input.GetKey(KeyCode.W))
-        {
-            input.y = 1;
-        }
-
-        if (Input.GetKey(KeyCode.S))
-        {
-            input.y = -1;
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            input.x = -1;
-        }
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            input.x = 1;
-        }
-
-        // Normalize the input vector to prevent faster diagonal movement
-        input = input.normalized;
-
-        return input;
+        return inputVector;
     }
 }
