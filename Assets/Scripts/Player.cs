@@ -12,6 +12,13 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        HandleMovement();
+    }
+
+    public bool IsWalking() => isWalking;
+
+    private void HandleMovement()
+    {
         // Get the movement input from the player
         Vector2 input = gameInput.GetMovementVectorNormazlized();
 
@@ -32,18 +39,17 @@ public class Player : MonoBehaviour
         {
             float playerHeight = 2f;
             float playerRadius = 1f;
-            float maxDistance = moveSpeed * Time.deltaTime;
+            float moveDistance = moveSpeed * Time.deltaTime;
 
             // Attempt on X axis
             Vector3 moveDirectionX = new Vector3(input.x, 0, 0).normalized;
 
             canMove = !Physics.CapsuleCast(
-                    transform.position, 
-                    transform.position + Vector3.up * playerHeight, 
-                    playerRadius,
-                    moveDirectionX, 
-                    maxDistance
-                    );
+                    point1: transform.position,
+                    point2: transform.position + Vector3.up * playerHeight,
+                    radius: playerRadius,
+                    direction: moveDirectionX,
+                    maxDistance: moveDistance);
 
             if (canMove)
             {
@@ -55,12 +61,11 @@ public class Player : MonoBehaviour
                 Vector3 moveDirectionZ = new Vector3(0, 0, input.y).normalized;
 
                 canMove = !Physics.CapsuleCast(
-                        transform.position,
-                        transform.position + Vector3.up * playerHeight,
-                        playerRadius,
-                        moveDirectionZ,
-                        maxDistance
-                        );
+                    point1: transform.position,
+                    point2: transform.position + Vector3.up * playerHeight,
+                    radius: playerRadius,
+                    direction: moveDirectionZ,
+                    maxDistance: moveDistance);
 
                 if (canMove)
                 {
@@ -81,9 +86,5 @@ public class Player : MonoBehaviour
 
         // Check if the player is walking
         isWalking = moveDirection != Vector3.zero;
-
-
     }
-
-    public bool IsWalking() => isWalking;
 }
