@@ -37,10 +37,10 @@ public class Player : MonoBehaviour
             {
                 clearCounter.Interact();
             }
-            else
-            {
-                Debug.Log("No ClearCounter component found!");
-            }
+        }
+        else
+        {
+            Debug.Log("-");
         }
     }
 
