@@ -8,14 +8,38 @@ public class Player : MonoBehaviour
     [SerializeField] GameInput gameInput;
 
     private bool isWalking = false;
-
+    private Vector3 lastMoveDirection;
 
     private void Update()
     {
         HandleMovement();
+        HandleInteraction();
     }
 
-    public bool IsWalking() => isWalking;
+    public void HandleInteraction()
+    {
+        Vector2 input = gameInput.GetMovementVectorNormazlized();
+        Vector3 moveDirection = new Vector3(input.x, 0, input.y);
+
+        float interactionDistance = 2f;
+        
+
+        if (moveDirection != Vector3.zero)
+        {
+            lastMoveDirection = moveDirection;
+        }
+
+        bool canInteract = Physics.Raycast(
+            transform.position, lastMoveDirection, out RaycastHit hitInfo, interactionDistance);
+
+        if (canInteract)
+        {
+            Debug.Log(hitInfo.transform);
+        } else
+        {
+            Debug.Log("-");
+        }
+    }
 
     private void HandleMovement()
     {
@@ -87,4 +111,6 @@ public class Player : MonoBehaviour
         // Check if the player is walking
         isWalking = moveDirection != Vector3.zero;
     }
+
+    public bool IsWalking() => isWalking;
 }
