@@ -22,7 +22,6 @@ public class Player : MonoBehaviour
         Vector3 moveDirection = new Vector3(input.x, 0, input.y);
 
         float interactionDistance = 2f;
-        
 
         if (moveDirection != Vector3.zero)
         {
@@ -34,10 +33,14 @@ public class Player : MonoBehaviour
 
         if (canInteract)
         {
-            Debug.Log(hitInfo.transform);
-        } else
-        {
-            Debug.Log("-");
+            if (hitInfo.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                clearCounter.Interact();
+            }
+            else
+            {
+                Debug.Log("No ClearCounter component found!");
+            }
         }
     }
 
