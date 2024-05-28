@@ -38,10 +38,6 @@ public class Player : MonoBehaviour
                 clearCounter.Interact();
             }
         }
-        else
-        {
-            Debug.Log("-");
-        }
     }
 
     private void HandleMovement()

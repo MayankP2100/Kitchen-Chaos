@@ -8,6 +8,13 @@ public class GameInput : MonoBehaviour
     {
         playerInput = new PlayerInput();
         playerInput.Player.Enable();
+
+        playerInput.Player.Interact.performed += Interact_performed;
+    }
+
+    private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
+    {
+        Debug.Log(obj);
     }
 
     public Vector2 GetMovementVectorNormazlized()
