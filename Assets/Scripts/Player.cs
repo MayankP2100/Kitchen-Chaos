@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -10,13 +11,14 @@ public class Player : MonoBehaviour
     private bool isWalking = false;
     private Vector3 lastMoveDirection;
 
-    private void Update()
+    private void Start()
     {
-        HandleMovement();
-        HandleInteraction();
+        // This will call the HandleInteraction method when the player interacts.
+        // It is in start because we want to subscribe to the event only once.
+        gameInput.OnInteractAction += GameInput_OnInteractAction;
     }
 
-    public void HandleInteraction()
+    private void GameInput_OnInteractAction(object sender, EventArgs e)
     {
         Vector2 input = gameInput.GetMovementVectorNormazlized();
         Vector3 moveDirection = new Vector3(input.x, 0, input.y);
@@ -40,12 +42,41 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        HandleMovement();
+    }
+
+    public void HandleInteraction()
+    {
+        Vector2 input = gameInput.GetMovementVectorNormazlized();
+        Vector3 moveDirection = new Vector3(input.x, 0, input.y);
+
+        float interactionDistance = 2f;
+
+        if (moveDirection != Vector3.zero)
+        {
+            lastMoveDirection = moveDirection;
+        }
+
+        bool canInteract = Physics.Raycast(
+            transform.position, lastMoveDirection, out RaycastHit hitInfo, interactionDistance);
+
+        if (canInteract)
+        {
+            if (hitInfo.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                //clearCounter.Interact();
+            }
+        }
+    }
+
     private void HandleMovement()
     {
-        // Get the movement input from the player
+        // Get the movement input from the player.
         Vector2 input = gameInput.GetMovementVectorNormazlized();
 
-        // Move the player
+        // Move the player.
         Vector3 moveDirection = new Vector3(input.x, 0, input.y);
 
         bool canMove = !Physics.CapsuleCast(
@@ -64,7 +95,7 @@ public class Player : MonoBehaviour
             float playerRadius = 1f;
             float moveDistance = moveSpeed * Time.deltaTime;
 
-            // Attempt on X axis
+            // Attempt on X axis.
             Vector3 moveDirectionX = new Vector3(input.x, 0, 0).normalized;
 
             canMove = !Physics.CapsuleCast(
@@ -80,7 +111,7 @@ public class Player : MonoBehaviour
             }
             else
             {
-                // Attempt on Z axis
+                // Attempt on Z axis.
                 Vector3 moveDirectionZ = new Vector3(0, 0, input.y).normalized;
 
                 canMove = !Physics.CapsuleCast(
@@ -102,12 +133,12 @@ public class Player : MonoBehaviour
         }
 
 
-        // Rotate the player
+        // Rotate the player.
         transform.forward =
             Vector3.Slerp(transform.forward, moveDirection, rotationSpeed * Time.deltaTime);
 
 
-        // Check if the player is walking
+        // Check if the player is walking.
         isWalking = moveDirection != Vector3.zero;
     }
 
