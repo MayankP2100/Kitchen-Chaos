@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
 
     private bool isWalking = false;
     private Vector3 lastMoveDirection;
+    private ClearCounter selectedClearCounter;
+
 
     private void Start()
     {
@@ -18,33 +20,20 @@ public class Player : MonoBehaviour
         gameInput.OnInteractAction += GameInput_OnInteractAction;
     }
 
+
     private void GameInput_OnInteractAction(object sender, EventArgs e)
     {
-        Vector2 input = gameInput.GetMovementVectorNormazlized();
-        Vector3 moveDirection = new Vector3(input.x, 0, input.y);
-
-        float interactionDistance = 2f;
-
-        if (moveDirection != Vector3.zero)
+        if (selectedClearCounter != null)
         {
-            lastMoveDirection = moveDirection;
-        }
-
-        bool canInteract = Physics.Raycast(
-            transform.position, lastMoveDirection, out RaycastHit hitInfo, interactionDistance);
-
-        if (canInteract)
-        {
-            if (hitInfo.transform.TryGetComponent(out ClearCounter clearCounter))
-            {
-                clearCounter.Interact();
-            }
+            selectedClearCounter.Interact();
         }
     }
+
 
     private void Update()
     {
         HandleMovement();
+        HandleInteraction();
     }
 
     public void HandleInteraction()
@@ -66,10 +55,22 @@ public class Player : MonoBehaviour
         {
             if (hitInfo.transform.TryGetComponent(out ClearCounter clearCounter))
             {
-                //clearCounter.Interact();
+                if (selectedClearCounter != clearCounter)
+                {
+                    selectedClearCounter = clearCounter;
+                }
+            }
+            else
+            {
+                selectedClearCounter = null;
             }
         }
+        else
+        {
+            selectedClearCounter = null;
+        }
     }
+
 
     private void HandleMovement()
     {
@@ -141,6 +142,7 @@ public class Player : MonoBehaviour
         // Check if the player is walking.
         isWalking = moveDirection != Vector3.zero;
     }
+
 
     public bool IsWalking() => isWalking;
 }
