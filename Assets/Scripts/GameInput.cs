@@ -21,7 +21,6 @@ public class GameInput : MonoBehaviour
         // This will call all the methods that are subscribed to the event.
         // ? is a null check operator. If OnInteractAction is not null, then call it.
         OnInteractAction?.Invoke(this, EventArgs.Empty);
-        Debug.Log("Interact");
     }
 
     public Vector2 GetMovementVectorNormazlized()
