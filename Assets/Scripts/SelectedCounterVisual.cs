@@ -13,7 +13,8 @@ public class SelectedCounterVisual : MonoBehaviour
         Player.Instance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
     }
 
-    private void Player_OnSelectedCounterChanged(object sender, Player.SelectedCounterChangedEventArgs e)
+    private void Player_OnSelectedCounterChanged(
+        object sender, Player.SelectedCounterChangedEventArgs e)
     {
         if (e.selectedCounter == clearCounter)
         {
