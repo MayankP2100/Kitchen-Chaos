@@ -3,18 +3,20 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // Events
     public event EventHandler<SelectedCounterChangedEventArgs> OnSelectedCounterChanged;
     public class SelectedCounterChangedEventArgs : EventArgs
     {
         public ClearCounter selectedCounter;
     }
 
+    // Singleton
     public static Player Instance { get; private set; }
 
     // Variables
-    [SerializeField] float moveSpeed = 8f;
-    [SerializeField] float rotationSpeed = 10f;
-    [SerializeField] GameInput gameInput;
+    [SerializeField] private float moveSpeed = 8f;
+    [SerializeField] private float rotationSpeed = 10f;
+    [SerializeField] private GameInput gameInput;
 
     private bool isWalking = false;
     private Vector3 lastMoveDirection;
@@ -23,6 +25,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        // Singleton
         if (Instance != null)
         {
             Debug.LogError("There is more than one player instance.");
@@ -67,6 +70,12 @@ public class Player : MonoBehaviour
             lastMoveDirection = moveDirection;
         }
 
+
+        /*
+            Check if the player can interact with a counter.
+            If the player can interact with a counter, select the counter.
+            If the player can't interact with a counter, deselect the counter.
+         */
         bool canInteract = Physics.Raycast(
             transform.position, lastMoveDirection, out RaycastHit hitInfo, interactionDistance);
 

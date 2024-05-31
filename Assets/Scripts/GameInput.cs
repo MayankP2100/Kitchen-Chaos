@@ -3,9 +3,12 @@ using UnityEngine;
 
 public class GameInput : MonoBehaviour
 {
+    // Events
     public event EventHandler OnInteractAction;
 
+    // Variables
     private PlayerInput playerInput;
+
 
     private void Awake()
     {
@@ -16,12 +19,14 @@ public class GameInput : MonoBehaviour
         playerInput.Player.Interact.performed += Interact_performed;
     }
 
+
     private void Interact_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
         // This will call all the methods that are subscribed to the event.
         // ? is a null check operator. If OnInteractAction is not null, then call it.
         OnInteractAction?.Invoke(this, EventArgs.Empty);
     }
+
 
     public Vector2 GetMovementVectorNormazlized()
     {
